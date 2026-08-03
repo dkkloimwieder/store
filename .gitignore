@@ -56,3 +56,9 @@ examples/angular/store-context/.angular/cache/21.2.7/store-context/angular-compi
 examples/angular/stores/.angular/cache/21.2.7/stores/.tsbuildinfo
 examples/angular/stores/.angular/cache/21.2.7/stores/angular-compiler.db
 examples/angular/stores/.angular/cache/21.2.7/stores/angular-compiler.db-lock
+
+# Beads / Dolt files (added by bd init)
+.dolt/
+*.db
+.beads-credential-key
+.beads/proxieddb/
