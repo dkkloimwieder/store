@@ -104,6 +104,17 @@ The adapter creates its backing signal with `ownedWrite: true` for exactly this 
 You do not need to do anything; it is mentioned here because the same consideration
 applies if you bridge another external store into Solid yourself.
 
+## Ownership
+
+Call `useSelector` from a component body, or from inside a `createRoot`. It releases
+its store subscription through `onCleanup`, and `onCleanup` does nothing when there is
+no owner — so a `useSelector` created at module scope stays subscribed for the lifetime
+of the process.
+
+This is not new in Solid 2; it was equally true under Solid 1. It is worth stating
+because Solid 2's `runWithOwner(null, fn)` means "detach" rather than failing, so an
+unowned call is quiet rather than loud.
+
 ## Context
 
 A Solid 2 context object **is** its own provider — `Context.Provider` no longer exists.
