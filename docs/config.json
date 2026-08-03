@@ -47,6 +47,10 @@
             {
               "label": "Quick Start - Solid",
               "to": "framework/solid/quick-start"
+            },
+            {
+              "label": "Solid 2 Guide",
+              "to": "framework/solid/guide/solid-2"
             }
           ]
         },
