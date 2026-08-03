@@ -1181,7 +1181,7 @@ importers:
   packages/solid-store:
     dependencies:
       '@tanstack/store':
-        specifier: workspace:*
+        specifier: ^0.11.0
         version: link:../store
     devDependencies:
       '@solidjs/testing-library':

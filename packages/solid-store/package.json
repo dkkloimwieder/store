@@ -49,7 +49,7 @@
     "src"
   ],
   "dependencies": {
-    "@tanstack/store": "workspace:*"
+    "@tanstack/store": "^0.11.0"
   },
   "devDependencies": {
     "@solidjs/testing-library": "1.0.0-beta.2",

@@ -11,6 +11,12 @@ build
 coverage
 dist
 
+# ...except solid-store's, so a commit-pinned git install has something
+# importable: its exports map points only at ./dist/*, and there is no
+# prepare script (tsconfig.build.json extends outside the package dir,
+# so a #path: subdirectory extraction could not build one anyway).
+!packages/solid-store/dist/
+
 # misc
 .DS_Store
 .env
