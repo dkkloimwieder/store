@@ -1,5 +1,6 @@
 import { createContext, useContext } from 'solid-js'
-import type { JSX, ParentProps } from 'solid-js'
+import type { ParentProps } from 'solid-js'
+import type { JSX } from '@solidjs/web'
 
 /**
  * Creates a typed Solid context for sharing a bundle of atoms and stores with a
@@ -44,18 +45,23 @@ export function createStoreContext<TValue extends object>(): {
   StoreProvider: (props: ParentProps<{ value: TValue }>) => JSX.Element
   useStoreContext: () => TValue
 } {
-  const Context = createContext<TValue>()
+  // An explicit null default rather than Solid 2's default-less
+  // `createContext<TValue>()`. The default-less form throws its own
+  // ContextNotFoundError, which would silently replace this package's documented
+  // "Missing StoreProvider for StoreContext" contract.
+  const Context = createContext<TValue | null>(null)
 
   function StoreProvider(props: ParentProps<{ value: TValue }>) {
-    return (
-      <Context.Provider value={props.value}>{props.children}</Context.Provider>
-    )
+    // In Solid 2 the context object is itself the provider component.
+    return <Context value={props.value}>{props.children}</Context>
   }
 
   function useStoreContext(): TValue {
     const value = useContext(Context)
 
-    if (value === undefined) {
+    // Thrown from the component body, never from a JSX expression: a throw
+    // inside JSX triggers REACTIVITY_HALTED and kills every later render.
+    if (value === null) {
       throw new Error('Missing StoreProvider for StoreContext')
     }
 

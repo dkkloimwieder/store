@@ -7,6 +7,11 @@ trustPolicy: 'no-downgrade'
 peerDependencyRules:
   allowedVersions:
     '@vue/composition-api>vue': '>= 2.5'
+    # Solid 2 transition (remove at Solid 2 GA): testing-library declares `>=2.0.0`
+    # peers, and semver only admits a prerelease when some comparator in the range
+    # shares its [major,minor,patch] — so `>=2.0.0` does not match `2.0.0-beta.30`.
+    '@solidjs/testing-library>solid-js': '>=2.0.0-0 <3.0.0'
+    '@solidjs/testing-library>@solidjs/web': '>=2.0.0-0 <3.0.0'
 
 packages:
   - 'packages/**'

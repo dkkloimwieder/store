@@ -29,7 +29,7 @@
     "test:types:ts59": "tsc",
     "test:lib": "vitest",
     "test:lib:dev": "pnpm run test:lib --watch",
-    "test:build": "publint --strict",
+    "test:build": "node ./scripts/check-ssr-safe-dist.mjs && publint --strict",
     "build": "tsdown --tsconfig tsconfig.build.json && tsc -p tsconfig.source.json"
   },
   "type": "module",
@@ -52,11 +52,13 @@
     "@tanstack/store": "workspace:*"
   },
   "devDependencies": {
-    "@solidjs/testing-library": "^0.8.10",
-    "solid-js": "^1.9.12",
-    "vite-plugin-solid": "^2.11.12"
+    "@solidjs/testing-library": "1.0.0-beta.2",
+    "@solidjs/web": "2.0.0-beta.30",
+    "solid-js": "2.0.0-beta.30",
+    "vite-plugin-solid": "3.0.0-next.21"
   },
   "peerDependencies": {
-    "solid-js": "^1.6.0"
+    "@solidjs/web": ">=2.0.0-beta.30 <3.0.0",
+    "solid-js": ">=2.0.0-beta.30 <3.0.0"
   }
 }

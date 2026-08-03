@@ -9,6 +9,7 @@ import {
   useSelector,
   useStore,
 } from '../src/index'
+import { settle } from './utils/reactive'
 
 describe('atom hooks', () => {
   it('useSelector reads mutable atom state and updates when changed', () => {
@@ -18,6 +19,7 @@ describe('atom hooks', () => {
     expect(result()).toBe(0)
 
     atom.set((prev) => prev + 1)
+    settle()
 
     expect(result()).toBe(1)
   })
@@ -29,6 +31,7 @@ describe('atom hooks', () => {
     expect(result[0]()).toBe(0)
 
     result[1]((prev) => prev + 5)
+    settle()
 
     expect(result[0]()).toBe(5)
   })
@@ -60,6 +63,7 @@ describe('store hooks', () => {
     expect(readonlyValue().value).toBe(2)
 
     baseStore.setState((prev) => prev + 1)
+    settle()
 
     expect(writableValue()).toBe(2)
     expect(readonlyValue().value).toBe(4)
@@ -85,12 +89,14 @@ describe('store hooks', () => {
       ...prev,
       ignored: prev.ignored + 1,
     }))
+    settle()
     expect(renderSpy).toHaveBeenCalledTimes(1)
 
     store.setState((prev) => ({
       ...prev,
       select: prev.select + 1,
     }))
+    settle()
     expect(result()).toBe(1)
     expect(renderSpy).toHaveBeenCalledTimes(1)
   })
@@ -126,6 +132,7 @@ describe('store hooks', () => {
         ignore: item.ignore + 1,
       })),
     }))
+    settle()
     expect(renderSpy).toHaveBeenCalledTimes(1)
 
     store.setState((prev) => ({
@@ -134,6 +141,7 @@ describe('store hooks', () => {
         select: item.select + 1,
       })),
     }))
+    settle()
     expect(result().map((item) => item.select)).toEqual([1, 1])
     expect(renderSpy).toHaveBeenCalledTimes(1)
   })
@@ -148,6 +156,7 @@ describe('store hooks', () => {
     expect(result()).toBe(0)
 
     store.setState((prev) => prev + 1)
+    settle()
 
     expect(result()).toBe(2)
   })
@@ -161,6 +170,7 @@ describe('useStore', () => {
     expect(result()).toBe(0)
 
     store.setState((prev) => prev + 1)
+    settle()
 
     expect(result()).toBe(1)
   })
@@ -172,6 +182,7 @@ describe('useStore', () => {
     expect(result()).toBe(0)
 
     atom.set((prev) => prev + 1)
+    settle()
 
     expect(result()).toBe(1)
   })
@@ -190,6 +201,7 @@ describe('_useStore', () => {
     expect(result[0]()).toBe(0)
 
     result[1].inc()
+    settle()
 
     expect(result[0]()).toBe(1)
   })
@@ -202,6 +214,7 @@ describe('_useStore', () => {
     expect(result[0]()).toBe(0)
 
     result[1]((prev) => prev + 1)
+    settle()
 
     expect(result[0]()).toBe(1)
   })
@@ -240,6 +253,7 @@ describe('createStoreContext', () => {
 
     countAtom.set((prev) => prev + 1)
     totalStore.setState((prev) => ({ ...prev, count: prev.count + 1 }))
+    settle()
 
     expect(getByText('Value: 1')).toBeInTheDocument()
     expect(getByText('Total: 1')).toBeInTheDocument()

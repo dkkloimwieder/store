@@ -40,10 +40,18 @@ TanStack Store is compatible with Angular 19+
 ## SolidJS
 
 ```sh
-npm install @tanstack/solid-store
+npm install @tanstack/solid-store solid-js @solidjs/web
 ```
 
-TanStack Store is compatible with Solid and SolidStart.
+`@tanstack/solid-store` requires **SolidJS 2** (`>=2.0.0-beta.30 <3.0.0`). Solid 1 is
+not supported. `@solidjs/web` is a peer dependency, so install it alongside `solid-js`
+and keep the two on the same version.
+
+Solid 2 changes when updates become observable — see the
+[Solid 2 Guide](./framework/solid/guide/solid-2) for the timing contract.
+
+There is no SolidStart release built on Solid 2 yet, so SolidStart apps are not
+currently supported.
 
 ## Svelte
 
