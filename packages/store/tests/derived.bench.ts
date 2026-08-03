@@ -1,7 +1,7 @@
 /* istanbul ignore file -- @preserve */
 import { bench, describe } from 'vitest'
 import { shallowRef, computed as vueComputed, watchEffect } from 'vue'
-import { createEffect, createMemo, createSignal } from 'solid-js'
+import { createEffect, createMemo, createRoot, createSignal, flush } from 'solid-js'
 import {
   computed as preactComputed,
   effect as preactEffect,
@@ -59,20 +59,35 @@ describe('Derived', () => {
     a.value = 2
   })
 
+  // Solid 2 needs three things the other adapters here do not, and all three are
+  // load-bearing rather than ceremony:
+  //  - an owner, because an unowned memo that has already computed recomputes
+  //    against pending values while its sources still read committed ones (it tears)
+  //  - `ownedWrite`, because `setA` runs inside the root's owned scope and a plain
+  //    signal write there is a dev-time throw (REACTIVE_WRITE_IN_OWNED_SCOPE)
+  //  - an explicit `flush()`, because updates settle on a microtask; without it the
+  //    iteration would measure a signal write that propagates to nothing
   bench('Solid', () => {
-    const [a, setA] = createSignal(1)
-    const b = createMemo(() => a())
-    const c = createMemo(() => a())
-    const d = createMemo(() => b())
-    const e = createMemo(() => b())
-    const f = createMemo(() => c())
-    const g = createMemo(() => d() + e() + f())
+    createRoot((dispose) => {
+      const [a, setA] = createSignal(1, { ownedWrite: true })
+      const b = createMemo(() => a())
+      const c = createMemo(() => a())
+      const d = createMemo(() => b())
+      const e = createMemo(() => b())
+      const f = createMemo(() => c())
+      const g = createMemo(() => d() + e() + f())
 
-    createEffect(() => {
-      noop(g())
+      createEffect(
+        () => g(),
+        (value) => {
+          noop(value)
+        },
+      )
+
+      setA(2)
+      flush()
+      dispose()
     })
-
-    setA(2)
   })
 
   bench('Preact', () => {
