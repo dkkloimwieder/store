@@ -34,6 +34,23 @@ test('useSelector infers value from mutable and readonly sources', () => {
   expectTypeOf(useSelector(readonlyStore)).toEqualTypeOf<Accessor<number>>()
 })
 
+test('useSelector accepts the Solid 2 read-timing options', () => {
+  const store = createStore(12)
+
+  expectTypeOf(
+    useSelector(store, (state) => state, { settleOnRead: true }),
+  ).toEqualTypeOf<Accessor<number>>()
+  expectTypeOf(
+    useSelector(store, (state) => state, {
+      compare: (a, b) => a === b,
+      settleOnRead: false,
+    }),
+  ).toEqualTypeOf<Accessor<number>>()
+
+  // @ts-expect-error settleOnRead is a boolean, not a settle function
+  useSelector(store, (state) => state, { settleOnRead: () => {} })
+})
+
 test('useAtom only accepts writable atoms', () => {
   const writableAtom = createAtom(12)
   const readonlyAtom = createAtom(() => 24)
